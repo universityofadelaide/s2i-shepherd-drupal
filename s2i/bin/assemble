@@ -23,6 +23,6 @@ echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
 echo "---> Building application from source..."
-ssh-keygen -R gitlab.adelaide.edu.au
-composer config -g gitlab-oauth.gitlab.adelaide.edu.au rD7cUZjqaEpsrVqCwxvS
+mkdir -p ~/.ssh
+ssh-keyscan -H gitlab.adelaide.edu.au >> ~/.ssh/known_hosts
 composer install

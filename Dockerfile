@@ -1,4 +1,5 @@
-FROM ubuntu:16.04
+# @todo Upgrade to latest 16.04.
+FROM ubuntu:xenial-20170119
 
 MAINTAINER Casey Fulton <casey.fulton@adelaide.edu.au>
 
@@ -58,6 +59,9 @@ RUN chmod +x /apache2-foreground
 COPY ./s2i/bin /usr/local/s2i
 RUN chmod +x /usr/local/s2i/*
 ENV PATH "$PATH:/usr/local/s2i"
+
+# @todo FOR DEV REMOVE ME.
+RUN apt update && apt install -y vim
 
 # Web port.
 EXPOSE 80
