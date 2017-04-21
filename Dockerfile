@@ -60,9 +60,6 @@ COPY ./s2i/bin /usr/local/s2i
 RUN chmod +x /usr/local/s2i/*
 ENV PATH "$PATH:/usr/local/s2i"
 
-# @todo FOR DEV REMOVE ME.
-RUN apt update && apt install -y vim
-
 # Web port.
 EXPOSE 80
 

@@ -22,7 +22,23 @@ fi
 echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
-echo "---> Building application from source..."
-mkdir -p ~/.ssh
-ssh-keyscan -H gitlab.adelaide.edu.au >> ~/.ssh/known_hosts
-composer install
+if [ -f composer.json ]; then
+	if [ "$git_host" ]; then
+		echo "---> Adding keys for known hosts from git_host env var..."
+		mkdir -p ~/.ssh
+		ssh-keyscan -H $git_host >> ~/.ssh/known_hosts 2>/dev/null
+	fi
+
+	if [ "$git_key" ]; then
+		echo "---> Importing credentials from git_key env var..."
+		mkdir -p ~/.ssh
+		eval $(ssh-agent)
+		echo "$git_key" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+		ssh-add ~/.ssh/id_rsa
+	fi
+
+	echo "---> Installing composer dependencies..."
+	composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
+	# Remove all .git directories to save space.
+	find . -name .git -type d -exec rm -rf {} +
+fi

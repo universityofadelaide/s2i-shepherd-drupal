@@ -1,0 +1,15 @@
+{
+    "name": "uofa/test-app",
+    "description": "Test application for checking shepherd-drupal s2i builder image.",
+    "type": "library",
+    "require": {
+        "psr/log": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Casey Fulton",
+            "email": "casey.fulton@adelaide.edu.au"
+        }
+    ]
+}
