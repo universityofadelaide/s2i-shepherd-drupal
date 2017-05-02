@@ -8,24 +8,24 @@ mkdir -p /code/web
 WEB_PATH=$(echo ${WEB_PATH} | sed 's#^\([^/]\)#/\1#')
 
 # Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
-if [ "$WEB_PATH" == "/" ]; then
+if [ "${WEB_PATH}" == "/" ]; then
   unset WEB_PATH
 fi
 
-# If $PUBLIC_DIR is set, symlink it to /shared/public and correct permissions.
+# If $PUBLIC_DIR is set, symlink it to /shared/public and is owned by www-data.
 if [ "${PUBLIC_DIR}" ]; then
   mkdir -p /shared/public
   # Only create symlink if it does not already exist.
   if [ ! -h /code/${PUBLIC_DIR} ]; then
     ln -sf /shared/public /code/${PUBLIC_DIR}
   fi
-  chown -R www-data:www-data /shared/public
+  chown -R 33:0 /shared/public
 fi
 
-# If $PRIVATE_DIR is set, ensure it exists and has correct permissions.
+# If $PRIVATE_DIR is set, ensure it exists and is owned by www-data.
 if [ "${PRIVATE_DIR}" ]; then
   mkdir -p ${PRIVATE_DIR}
-  chown -R www-data:www-data ${PRIVATE_DIR}
+  chown -R 33:0 ${PRIVATE_DIR}
 fi
 
 exec apache2 -D FOREGROUND

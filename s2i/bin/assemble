@@ -4,12 +4,12 @@
 # The 'assemble' script builds your application source so that it is ready to run.
 #
 # For more information refer to the documentation:
-#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#  https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
 # If the 'shepherd-drupal' assemble script is executed with the '-h' flag, print the usage.
 if [[ "$1" == "-h" ]]; then
-	exec /usr/libexec/s2i/usage
+  exec /usr/libexec/s2i/usage
 fi
 
 # Restore artifacts from the previous build (if they exist).
@@ -23,22 +23,18 @@ echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
 if [ -f composer.json ]; then
-	if [ "$git_host" ]; then
-		echo "---> Adding keys for known hosts from git_host env var..."
-		mkdir -p ~/.ssh
-		ssh-keyscan -H $git_host >> ~/.ssh/known_hosts 2>/dev/null
-	fi
+  if [ -f ssh-privatekey ]; then
+    echo "---> Importing credentials from passed keys..."
+    eval $(ssh-agent)
+    ssh-add ssh-privatekey
+  fi
 
-	if [ "$git_key" ]; then
-		echo "---> Importing credentials from git_key env var..."
-		mkdir -p ~/.ssh
-		eval $(ssh-agent)
-		echo "$git_key" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-		ssh-add ~/.ssh/id_rsa
-	fi
+  echo "---> Setting ssh parameters..."
+  mkdir -p ~/.ssh
+  echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" > ~/.ssh/config
 
-	echo "---> Installing composer dependencies..."
-	composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
-	# Remove all .git directories to save space.
-	find . -name .git -type d -exec rm -rf {} +
+  echo "---> Installing composer dependencies..."
+  composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
+  # Remove all .git directories to save space.
+  find . -name .git -type d -exec rm -rf {} +
 fi

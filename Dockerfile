@@ -32,8 +32,11 @@ RUN apt-get update \
 # Install Drupal tools: Robo, Drush, Drupal console and Composer.
 RUN wget -O /usr/local/bin/robo https://github.com/consolidation/Robo/releases/download/1.0.4/robo.phar && chmod +x /usr/local/bin/robo \
 && wget -O /usr/local/bin/drush https://s3.amazonaws.com/files.drush.org/drush.phar && chmod +x /usr/local/bin/drush \
-&& wget -O /usr/local/bin/drupal https://drupalconsole.com/installer && chmod +x /usr/local/bin/drupal && /usr/local/bin/drupal init \
+&& wget -O /usr/local/bin/drupal https://drupalconsole.com/installer && chmod +x /usr/local/bin/drupal \
 && wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Make bash the default shell
+RUN ln -sf /bin/bash /bin/sh
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
@@ -48,8 +51,8 @@ RUN a2enmod rewrite \
 && a2dissite 000-default \
 && phpenmod -v ALL -s ALL php_custom
 
-# Add /code /shared directories and ensure ownership by web user.
-RUN mkdir -p /code /shared && chown www-data:www-data /code /shared
+# Add /code /shared directories and ensure ownership by User 33 (www-data) and Group 0 (root).
+RUN mkdir -p /code /shared
 
 # Add in bootstrap script.
 COPY ./files/apache2-foreground /apache2-foreground
@@ -61,10 +64,24 @@ RUN chmod +x /usr/local/s2i/*
 ENV PATH "$PATH:/usr/local/s2i"
 
 # Web port.
-EXPOSE 80
+EXPOSE 8080
 
 # Set working directory.
 WORKDIR /code
+
+# Change all ownership to User 33 (www-data) and Group 0 (root).
+RUN chown -R 33:0   /var/www \
+&&  chown -R 33:0   /run/lock \
+&&  chown -R 33:0   /var/run/apache2 \
+&&  chmod -R ug+rw  /var/www \
+&&  chmod -R ug+rw  /run/lock \
+&&  chmod -R ug+rw  /var/run/apache2 \
+&&  chown -R 33:0   /code \
+&&  chown -R 33:0   /shared \
+&&  chmod -R ug+rw  /code \
+&&  chmod -R ug+rw  /shared
+
+USER 33
 
 # Start the web server.
 CMD ["/apache2-foreground"]
