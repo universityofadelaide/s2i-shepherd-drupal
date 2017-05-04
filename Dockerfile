@@ -5,7 +5,7 @@ MAINTAINER Casey Fulton <casey.fulton@adelaide.edu.au>
 
 LABEL io.k8s.description="Platform for serving Drupal PHP apps in Shepherd" \
       io.k8s.display-name="Shepherd Drupal" \
-      io.openshift.expose-services="80:http" \
+      io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,shepherd,drupal,php,apache" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i"
 
@@ -73,13 +73,19 @@ WORKDIR /code
 RUN chown -R 33:0   /var/www \
 &&  chown -R 33:0   /run/lock \
 &&  chown -R 33:0   /var/run/apache2 \
-&&  chmod -R ug+rw  /var/www \
-&&  chmod -R ug+rw  /run/lock \
-&&  chmod -R ug+rw  /var/run/apache2 \
+&&  chown -R 33:0   /var/log/apache2 \
 &&  chown -R 33:0   /code \
-&&  chown -R 33:0   /shared \
-&&  chmod -R ug+rw  /code \
-&&  chmod -R ug+rw  /shared
+&&  chown -R 33:0   /shared
+
+RUN chmod -R g+rwX  /var/www \
+&&  chmod -R g+rwX  /run/lock \
+&&  chmod -R g+rwX  /var/run/apache2 \
+&&  chmod -R g+rwX  /var/log/apache2 \
+&&  chmod -R g+rwX  /code \
+&&  chmod -R g+rwX  /shared
+
+# Change the homedir of www-data to be /code
+RUN usermod -d /code www-data
 
 USER 33
 
