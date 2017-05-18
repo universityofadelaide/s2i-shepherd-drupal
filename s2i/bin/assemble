@@ -14,9 +14,9 @@ fi
 
 # Restore artifacts from the previous build (if they exist).
 #
-if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+if [ "$(ls -A /tmp/artifacts/ 2>/dev/null)" ]; then
   echo "---> Restoring build artifacts..."
-  mv /tmp/artifacts/. ./
+  mv /tmp/artifacts/.composer ./
 fi
 
 echo "---> Installing application source..."
@@ -35,6 +35,8 @@ if [ -f composer.json ]; then
 
   echo "---> Installing composer dependencies..."
   composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
+
+  echo "---> Cleaning up..."
   # Remove all .git directories to save space.
   find . -name .git -type d -exec rm -rf {} +
 fi
