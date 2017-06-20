@@ -1,4 +1,8 @@
-#!/bin/sh -e
+#!/bin/bash
+#
+# Note that this command is only run on incremental builds.
+# See incremental: true
+# https://docs.openshift.com/enterprise/3.2/dev_guide/builds.html#incremental-builds
 #
 # S2I save-artifacts script for the 'shepherd-drupal' image.
 # The save-artifacts script streams a tar archive to standard output.
@@ -8,4 +12,5 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 # tar cf - <list of files and folders>
+cd ${HOME}
 tar cf - .composer

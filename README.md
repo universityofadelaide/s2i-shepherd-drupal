@@ -1,4 +1,21 @@
 
+# This is now an established builder image, see below for starter details
+
+General usage for updates is to test locally as outlined below, but then
+Execute a docker build into the minishift docker registry as follows:
+
+Set vars so docker builds into minishift
+```bash
+eval $(minishift docker-env)
+```
+
+Execute build
+```bash
+docker build -t uofa/s2-shepherd-drupal .
+```
+
+Now when you deploy from shepherd, it will use the updated uofa/s2-shepherd-drupal image with your changes.
+
 # Creating a basic S2I builder image  
 
 ## Getting started  
