@@ -35,7 +35,7 @@ RUN wget -O /usr/local/bin/robo https://github.com/consolidation/Robo/releases/d
 && wget -O /usr/local/bin/drupal https://drupalconsole.com/installer && chmod +x /usr/local/bin/drupal \
 && wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Make bash the default shell
+# Make bash the default shell.
 RUN ln -sf /bin/bash /bin/sh
 
 # Apache config.
@@ -84,7 +84,7 @@ RUN chmod -R g+rwX  /var/www \
 &&  chmod -R g+rwX  /code \
 &&  chmod -R g+rwX  /shared
 
-# Change the homedir of www-data to be /code
+# Change the homedir of www-data to be /code.
 RUN usermod -d /code www-data
 
 USER 33
