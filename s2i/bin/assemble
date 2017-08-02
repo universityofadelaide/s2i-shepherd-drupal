@@ -37,6 +37,11 @@ if [ -f composer.json ]; then
   echo "---> Installing composer dependencies..."
   composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
 
+  echo "---> Symlinking public and private directories to /shared..."
+  mkdir -p /shared/public /shared/private
+  ln -s /shared/public /code/web/sites/default/files
+  ln -s /shared/private /code/private
+
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
   find . -name .git -type d -exec rm -rf {} +
