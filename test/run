@@ -157,3 +157,5 @@ test_connection
 check_result $?
 
 cleanup
+
+echo "Test passed."
