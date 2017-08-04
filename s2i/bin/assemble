@@ -23,11 +23,6 @@ fi
 echo "---> Installing application source..."
 cp -Rf /tmp/src/. ./
 
-if [ -d web/sites/default ]; then
-    echo "---> Ensuring web/sites/default directory is group writable..."
-    chmod g+w web/sites/default
-fi
-
 if [ -f composer.json ]; then
   if [ -f ssh-privatekey ]; then
     echo "---> Importing credentials from passed keys..."
@@ -41,6 +36,11 @@ if [ -f composer.json ]; then
 
   echo "---> Installing composer dependencies..."
   composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
+
+  if [ -d web/sites/default ]; then
+      echo "---> Ensuring web/sites/default directory is group writable..."
+      chmod g+w web/sites/default
+  fi
 
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
