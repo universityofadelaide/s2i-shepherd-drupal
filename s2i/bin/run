@@ -26,10 +26,13 @@ if [ "${WEB_PATH}" == "/" ]; then
 fi
 
 echo "---> Symlinking public and private directories to /shared."
-# @todo Consider parameterising these values. A distro should define its shared file paths.
 mkdir -p /shared/public /shared/private
-ln -s /shared/public /code/web/sites/default/files
-ln -s /shared/private /code/private
+if [ ! -h /code/web/sites/default/files ]; then
+  ln -s /shared/public /code/web/sites/default/files
+fi
+if [ ! -h /code/private ]; then
+  ln -s /shared/private /code/private
+fi
 
 echo "---> Starting apache2..."
 exec apache2 -D FOREGROUND
