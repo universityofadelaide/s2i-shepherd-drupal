@@ -54,10 +54,6 @@ RUN a2enmod rewrite \
 # Add /code /shared directories and ensure ownership by User 33 (www-data) and Group 0 (root).
 RUN mkdir -p /code /shared
 
-# Add in bootstrap script.
-COPY ./files/apache2-foreground /apache2-foreground
-RUN chmod +x /apache2-foreground
-
 # Add s2i scripts.
 COPY ./s2i/bin /usr/local/s2i
 RUN chmod +x /usr/local/s2i/*

@@ -7,5 +7,18 @@
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
 
+# Make umask more permissive.
 umask 0002
-exec /apache2-foreground
+
+# Ensure /code/web directory exists, preventing Apache from crashing.
+mkdir -p /code/web
+
+# If it's set, ensure $WEB_PATH starts with a slash.
+WEB_PATH=$(echo ${WEB_PATH} | sed 's#^\([^/]\)#/\1#')
+
+# Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
+if [ "${WEB_PATH}" == "/" ]; then
+  unset WEB_PATH
+fi
+
+exec apache2 -D FOREGROUND
