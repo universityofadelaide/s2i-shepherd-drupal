@@ -8,17 +8,27 @@
 #
 
 # Make umask more permissive.
+echo "---> Setting umask to 0002."
 umask 0002
 
 # Ensure /code/web directory exists, preventing Apache from crashing.
+echo "---> Ensuring /code/web directory exists."
 mkdir -p /code/web
 
 # If it's set, ensure $WEB_PATH starts with a slash.
 WEB_PATH=$(echo ${WEB_PATH} | sed 's#^\([^/]\)#/\1#')
+echo "---> \$WEB_PATH is set to: ${WEB_PATH}"
 
 # Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
 if [ "${WEB_PATH}" == "/" ]; then
+  echo "---> Unsetting \$WEB_PATH to avoid an apache alias being created."
   unset WEB_PATH
 fi
+
+echo "---> Symlinking public and private directories to /shared."
+# @todo Consider parameterising these values. A distro should define its shared file paths.
+mkdir -p /shared/public /shared/private
+ln -s /shared/public /code/web/sites/default/files
+ln -s /shared/private /code/private
 
 exec apache2 -D FOREGROUND

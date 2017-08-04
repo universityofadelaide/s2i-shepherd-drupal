@@ -86,4 +86,4 @@ RUN usermod -d /code www-data
 USER 33
 
 # Start the web server.
-CMD ["/apache2-foreground"]
+CMD ["/usr/local/s2i/run"]
