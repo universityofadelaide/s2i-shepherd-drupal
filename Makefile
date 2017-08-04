@@ -1,4 +1,4 @@
-IMAGE_NAME = shepherd-drupal
+IMAGE_NAME = uofa/s2i-shepherd-drupal
 
 .PHONY: build
 build:

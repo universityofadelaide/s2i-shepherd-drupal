@@ -11,10 +11,13 @@ eval $(minishift docker-env)
 
 Execute build
 ```bash
-docker build -t uofa/s2-shepherd-drupal .
+IMAGE_NAME=uofa/s2i-shepherd-drupal
+docker build -t ${IMAGE_NAME} .
 ```
 
-Now when you deploy from shepherd, it will use the updated uofa/s2-shepherd-drupal image with your changes.
+The builder image can also be created by using the *make* command since a *Makefile* is included.
+
+Now when you deploy from shepherd, it will use the updated uofa/s2i-shepherd-drupal image with your changes.
 
 # Creating a basic S2I builder image  
 
