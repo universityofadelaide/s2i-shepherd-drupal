@@ -42,6 +42,10 @@ if [ -f composer.json ]; then
       chmod g+w web/sites/default
   fi
 
+  echo "---> Storing git ref..."
+  mkdir -p web/.shepherd
+  cp .git/ORIG_HEAD web/.shepherd/git-ref
+
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
   find . -name .git -type d -exec rm -rf {} +
