@@ -44,7 +44,7 @@ if [ -f composer.json ]; then
 
   echo "---> Storing git ref..."
   mkdir -p web/.shepherd
-  cp .git/ORIG_HEAD web/.shepherd/git-ref
+  git rev-parse HEAD > web/.shepherd/git-ref
 
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
