@@ -42,6 +42,13 @@ if [ -f composer.json ]; then
       chmod g+w web/sites/default
   fi
 
+  echo "---> Storing git ref..."
+  mkdir -p web/.shepherd
+  git rev-parse HEAD > web/.shepherd/git-ref
+
+  echo "---> Storing git tags..."
+  git describe --tags HEAD > web/.shpeherd/git-tags
+
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
   find . -name .git -type d -exec rm -rf {} +
