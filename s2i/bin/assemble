@@ -47,7 +47,7 @@ if [ -f composer.json ]; then
   git rev-parse HEAD > web/.shepherd/git-ref
 
   echo "---> Storing git tags..."
-  git describe --tags HEAD > web/.shpeherd/git-tags
+  git describe --tags HEAD > web/.shepherd/git-tags
 
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
