@@ -44,10 +44,10 @@ if [ -f composer.json ]; then
 
   echo "---> Storing git ref..."
   mkdir -p web/.shepherd
-  git rev-parse HEAD > web/.shepherd/git-ref
+  git rev-parse HEAD > web/.shepherd/git-ref || true
 
   echo "---> Storing git tags..."
-  git describe --tags HEAD > web/.shepherd/git-tags
+  git describe --tags HEAD > web/.shepherd/git-tags || true
 
   echo "---> Cleaning up..."
   # Remove all .git directories to save space.
