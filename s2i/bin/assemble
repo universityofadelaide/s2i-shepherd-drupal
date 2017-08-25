@@ -43,7 +43,7 @@ if [ -f composer.json ]; then
   fi
 
   echo "---> Storing git ref..."
-  mkdir -p web/.shepherd
+  mkdir -p web/.shepherd && chmod g+x web/.shepherd
   git rev-parse HEAD > web/.shepherd/git-ref || true
 
   echo "---> Storing git tags..."
