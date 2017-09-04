@@ -24,7 +24,7 @@ if [ "${WEB_PATH}" == "/" ]; then
   echo "---> Unsetting \$WEB_PATH to avoid an apache alias being created."
   unset WEB_PATH
 else
-  sed -i "s@# RewriteBase /@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess
+  sed -i "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess
 fi
 
 echo "---> Symlinking public and private directories to /shared."
