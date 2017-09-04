@@ -30,9 +30,6 @@ else
   | tac | tac | tee /code/web/.htaccess > /dev/null
 fi
 
-# Reduce permissions on htaccess to prevent any funny business.
-chmod g-w /code/web/.htaccess
-
 echo "---> Symlinking public and private directories to /shared."
 mkdir -p /shared/public /shared/private
 if [ ! -h /code/web/sites/default/files ]; then
