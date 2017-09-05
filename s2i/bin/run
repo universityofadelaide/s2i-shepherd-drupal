@@ -23,7 +23,7 @@ echo "---> \$WEB_PATH is set to: ${WEB_PATH}"
 if [ "${WEB_PATH}" == "/" ]; then
   echo "---> Unsetting \$WEB_PATH to avoid an apache alias being created."
   unset WEB_PATH
-else
+elif [ "${WEB_PATH}" ]; then
   # Set rewrite base in htaccess to WEB_PATH to generate correct URLs.
   # Uses three steps via a temp file because /code/web is not group writable.
   HTACCESS_TEMP=$(tempfile)
