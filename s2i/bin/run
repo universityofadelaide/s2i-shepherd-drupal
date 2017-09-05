@@ -25,9 +25,10 @@ if [ "${WEB_PATH}" == "/" ]; then
   unset WEB_PATH
 else
   # Set rewrite base in htaccess to WEB_PATH to generate correct URLs.
-  # Uses 'tacat' to output file to get around inability to create temporary files in this directory.
-  sed "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess \
-  | tac | tac | tee /code/web/.htaccess > /dev/null
+  # Uses two steps via a temp file because /code/web is not group writable.
+  HTACCESS_TEMP=$(tempfile)
+  sed "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess > ${HTACCESS_TEMP}
+  mv -f ${HTACCESS_TEMP} /code/web/.htaccess
 fi
 
 echo "---> Symlinking public and private directories to /shared."
