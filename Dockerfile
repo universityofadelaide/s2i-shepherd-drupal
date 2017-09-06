@@ -1,5 +1,4 @@
-# @todo Upgrade to latest 16.04.
-FROM ubuntu:xenial-20170119
+FROM ubuntu:16.04
 
 MAINTAINER Casey Fulton <casey.fulton@adelaide.edu.au>
 
@@ -16,17 +15,19 @@ ENV TZ=Australia/Adelaide
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Ensure UTF-8.
-RUN locale-gen en_AU.UTF-8
 ENV LANG       en_AU.UTF-8
 ENV LC_ALL     en_AU.UTF-8
 
+# Add php7.1 repo to apt. Remove once we update to the next Ubuntu LTS.
+RUN echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" > /etc/apt/sources.list.d/php.list \
+&& apt-key adv --keyserver keyserver.ubuntu.com --recv E5267A6C
+
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
-&& apt-get -y install software-properties-common python-software-properties \
-&& add-apt-repository -y ppa:ondrej/php && apt-get update \
+&& apt-get -y install locales \
+&& locale-gen en_AU.UTF-8 \
 && apt-get -y dist-upgrade \
-&& apt-get -y install apache2 php-common libapache2-mod-php mysql-client php-apcu php-bcmath php-cli php-curl php-gd php-ldap php-memcached php-mysql php7.1-opcache php-mbstring php-soap php-xml php-zip git libedit-dev ssmtp wget \
-&& apt-get -y remove --purge software-properties-common python-software-properties \
+&& apt-get -y install apache2 php7.1-common libapache2-mod-php7.1 mysql-client php-apcu php7.1-curl php7.1-gd php7.1-ldap php7.1-mysql php7.1-opcache php7.1-mbstring php7.1-bcmath php7.1-xml php7.1-zip php7.1-soap libedit-dev php-redis ssmtp wget \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install Drupal tools: Robo, Drush, Drupal console and Composer.
