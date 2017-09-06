@@ -27,7 +27,7 @@ RUN apt-get update \
 && apt-get -y install locales \
 && locale-gen en_AU.UTF-8 \
 && apt-get -y dist-upgrade \
-&& apt-get -y install apache2 php7.1-common libapache2-mod-php7.1 mysql-client php-apcu php7.1-curl php7.1-gd php7.1-ldap php7.1-mysql php7.1-opcache php7.1-mbstring php7.1-bcmath php7.1-xml php7.1-zip php7.1-soap libedit-dev php-redis ssmtp wget \
+&& apt-get -y install apache2 php7.1-common libapache2-mod-php7.1 mysql-client php-apcu php7.1-curl php7.1-gd php7.1-ldap php7.1-mysql php7.1-opcache php7.1-mbstring php7.1-bcmath php7.1-xml php7.1-zip php7.1-soap libedit-dev php-redis ssmtp wget openssh-client \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install Drupal tools: Robo, Drush, Drupal console and Composer.
