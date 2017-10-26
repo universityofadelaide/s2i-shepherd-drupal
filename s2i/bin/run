@@ -1,11 +1,4 @@
 #!/bin/bash -e
-#
-# S2I run script for the 'shepherd-drupal' image.
-# The run script executes the server that runs your application.
-#
-# For more information see the documentation:
-#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
-#
 
 # Make umask more permissive.
 echo "---> Setting umask to 0002."
@@ -15,30 +8,47 @@ umask 0002
 echo "---> Ensuring /code/web directory exists."
 mkdir -p /code/web
 
-# If it's set, ensure $WEB_PATH starts with a slash.
-WEB_PATH=$(echo ${WEB_PATH} | sed 's#^\([^/]\)#/\1#')
-echo "---> \$WEB_PATH is set to: ${WEB_PATH}"
+# Is the $WEB_PATH set?
+if [ -n "${WEB_PATH:+1}" ]; then
+  # If it's set, ensure $WEB_PATH starts with a slash.
+  WEB_PATH=$(echo ${WEB_PATH} | sed 's#^\([^/]\)#/\1#')
 
-# Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
-if [ "${WEB_PATH}" == "/" ]; then
-  echo "---> Unsetting \$WEB_PATH to avoid an apache alias being created."
-  unset WEB_PATH
-elif [ "${WEB_PATH}" ]; then
-  # Set rewrite base in htaccess to WEB_PATH to generate correct URLs.
-  # Uses three steps via a temp file because /code/web is not group writable.
-  HTACCESS_TEMP=$(tempfile)
-  sed "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess > ${HTACCESS_TEMP}
-  cp ${HTACCESS_TEMP} /code/web/.htaccess
-  rm ${HTACCESS_TEMP}
+  # Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
+  if [ "$WEB_PATH" == "/" ]; then
+    unset WEB_PATH
+  elif
+    # Set rewrite base in htaccess to WEB_PATH to generate correct URLs.
+    # Uses three steps via a temp file because /code/web is not group writable.
+    HTACCESS_TEMP=$(tempfile)
+    sed "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess > ${HTACCESS_TEMP}
+    cp ${HTACCESS_TEMP} /code/web/.htaccess
+    rm ${HTACCESS_TEMP}
+  fi
 fi
 
-echo "---> Symlinking public and private directories to /shared."
-mkdir -p /shared/public /shared/private
-if [ ! -h /code/web/sites/default/files ]; then
-  ln -s /shared/public /code/web/sites/default/files
+echo "---> Symlinking public files directory to ${PUBLIC_DIR}."
+# If $PUBLIC_DIR is set, symlink it to /shared/public and correct permissions.
+if [ -n "${PUBLIC_DIR:+1}" ]; then
+  mkdir -p ${PUBLIC_DIR}
+  chown -R www-data:www-data /shared/public
+  # Only create symlink if it does not already exist.
+  if [ ! -h /code/web/sites/default/files ]; then
+    ln -sf ${PUBLIC_DIR} /code/web/sites/default/files
+  fi
 fi
-if [ ! -h /code/private ]; then
-  ln -s /shared/private /code/private
+
+echo "---> Symlinking private files directory to ${PRIVATE_DIR}."
+# If $PRIVATE_DIR is set, ensure it exists and has correct permissions.
+if [ -n "${PRIVATE_DIR:+1}" ]; then
+  mkdir -p ${PRIVATE_DIR}
+  chown -R www-data:www-data ${PRIVATE_DIR}
+fi
+
+echo "---> Symlinking temporary files directory to ${TMP_DIR}."
+# If $TMP_DIR is set, ensure it exists and has correct permissions.
+if [ -n "${TMP_DIR:+1}" ]; then
+  mkdir -p ${TMP_DIR}
+  chown -R www-data:www-data ${TMP_DIR}
 fi
 
 echo "---> Starting apache2..."
