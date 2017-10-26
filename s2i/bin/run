@@ -37,7 +37,6 @@ echo "---> Symlinking public files directory to ${PUBLIC_DIR}."
 # If $PUBLIC_DIR is set, symlink it to /shared/public and correct permissions.
 if [ -n "${PUBLIC_DIR:+1}" ]; then
   mkdir -p ${PUBLIC_DIR}
-  chown -R www-data:www-data /shared/public
   # Only create symlink if it does not already exist.
   if [ ! -h /code/web/sites/default/files ]; then
     ln -sf ${PUBLIC_DIR} /code/web/sites/default/files
@@ -48,14 +47,12 @@ echo "---> Symlinking private files directory to ${PRIVATE_DIR}."
 # If $PRIVATE_DIR is set, ensure it exists and has correct permissions.
 if [ -n "${PRIVATE_DIR:+1}" ]; then
   mkdir -p ${PRIVATE_DIR}
-  chown -R www-data:www-data ${PRIVATE_DIR}
 fi
 
 echo "---> Symlinking temporary files directory to ${TMP_DIR}."
 # If $TMP_DIR is set, ensure it exists and has correct permissions.
 if [ -n "${TMP_DIR:+1}" ]; then
   mkdir -p ${TMP_DIR}
-  chown -R www-data:www-data ${TMP_DIR}
 fi
 
 echo "---> Starting apache2..."
