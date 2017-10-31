@@ -37,10 +37,6 @@ echo "---> Symlinking public files directory to ${PUBLIC_DIR}."
 # If $PUBLIC_DIR is set, symlink it to /shared/public and correct permissions.
 if [ -n "${PUBLIC_DIR:+1}" ]; then
   mkdir -p ${PUBLIC_DIR}
-  # Only create symlink if it does not already exist.
-  if [ ! -h /code/web/sites/default/files ]; then
-    ln -sf ${PUBLIC_DIR} /code/web/sites/default/files
-  fi
 fi
 
 echo "---> Symlinking private files directory to ${PRIVATE_DIR}."

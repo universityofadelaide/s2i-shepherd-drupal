@@ -37,6 +37,13 @@ if [ -f composer.json ]; then
   echo "---> Installing composer dependencies..."
   composer install --no-dev --prefer-dist --no-interaction --no-ansi --optimize-autoloader
 
+  echo "---> Symlink the public file directory..."
+  if [ ! -h /code/web/sites/default/files ]; then
+    chmod g+w /code/web/sites/default
+    ln -sf ${PUBLIC_DIR} /code/web/sites/default/files
+    chmod g-w /code/web/sites/default
+  fi
+
   if [ -f web/.htaccess ]; then
       echo "---> Ensuring web/.htaccess file is group writable..."
       chmod g+w web/.htaccess
