@@ -39,9 +39,9 @@ if [ -f composer.json ]; then
 
   echo "---> Symlink the public file directory..."
   if [ ! -h /code/web/sites/default/files ]; then
-    chmod g+w /code/web/sites/default
+    chmod a+w /code/web/sites/default
     ln -sf ${PUBLIC_DIR} /code/web/sites/default/files
-    chmod g-w /code/web/sites/default
+    chmod a-w /code/web/sites/default
   fi
 
   if [ -f web/.htaccess ]; then
