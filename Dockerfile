@@ -40,7 +40,7 @@ RUN ln -sf /bin/bash /bin/sh
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
 
 # PHP config.
-COPY ./files/php_custom.ini /etc/php/7.1/mods-available/php_custom.ini
+COPY ./files/php_custom.ini /etc/php/7.2/mods-available/php_custom.ini
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
