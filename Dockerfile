@@ -55,7 +55,7 @@ RUN mkdir -p /code /shared
 # Add s2i scripts.
 COPY ./s2i/bin /usr/local/s2i
 RUN chmod +x /usr/local/s2i/*
-ENV PATH "$PATH:/usr/local/s2i"
+ENV PATH "$PATH:/usr/local/s2i:/code/bin"
 
 # Web port.
 EXPOSE 8080
