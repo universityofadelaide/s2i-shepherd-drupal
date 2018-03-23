@@ -30,8 +30,9 @@ RUN apt-get update \
 && apt-get -y install apache2 php7.2-common libapache2-mod-php7.2 mysql-client php-apcu php7.2-curl php7.2-gd php7.2-ldap php7.2-mysql php7.2-opcache php7.2-mbstring php7.2-bcmath php7.2-xml php7.2-zip php7.2-soap libedit-dev php-redis ssmtp wget openssh-client git \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
-# Install Drupal tools: Robo, Drush, Drupal console and Composer.
+# Install Composer.
 RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer global require hirak/prestissimo
 
 # Make bash the default shell.
 RUN ln -sf /bin/bash /bin/sh
