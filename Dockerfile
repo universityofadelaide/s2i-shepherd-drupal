@@ -1,6 +1,6 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
-MAINTAINER Casey Fulton <casey.fulton@adelaide.edu.au>
+MAINTAINER Michael Priest <michael.priest@adelaide.edu.au>
 
 LABEL io.k8s.description="Platform for serving Drupal PHP apps in Shepherd" \
       io.k8s.display-name="Shepherd Drupal" \
@@ -16,18 +16,37 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Ensure UTF-8.
 ENV LANG       en_AU.UTF-8
+ENV LANGUAGE   en_AU:en
 ENV LC_ALL     en_AU.UTF-8
-
-# Add php7.2 repo to apt. Remove once we update to the next Ubuntu LTS.
-RUN echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" > /etc/apt/sources.list.d/php.list \
-&& apt-key adv --keyserver keyserver.ubuntu.com --recv E5267A6C
 
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
 && apt-get -y install locales \
+&& sed -i -e 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen \
 && locale-gen en_AU.UTF-8 \
 && apt-get -y dist-upgrade \
-&& apt-get -y install apache2 php7.2-common libapache2-mod-php7.2 mysql-client php-apcu php7.2-curl php7.2-gd php7.2-ldap php7.2-mysql php7.2-opcache php7.2-mbstring php7.2-bcmath php7.2-xml php7.2-zip php7.2-soap libedit-dev php-redis ssmtp wget openssh-client git \
+&& apt-get -y install \
+  apache2 \
+  git \
+  libapache2-mod-php \
+  libedit-dev \
+  mysql-client \
+  openssh-client \
+  php-common \
+  php-apcu \
+  php-bcmath \
+  php-curl \
+  php-gd \
+  php-ldap \
+  php-mbstring \
+  php-mysql \
+  php-opcache \
+  php-redis \
+  php-soap \
+  php-xml \
+  php-zip \
+  ssmtp \
+  wget \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install Composer.
