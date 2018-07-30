@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-MAINTAINER Michael Priest <michael.priest@adelaide.edu.au>
+LABEL MAINTAINER="Michael Priest <michael.priest@adelaide.edu.au>"
 
 LABEL io.k8s.description="Platform for serving Drupal PHP apps in Shepherd" \
       io.k8s.display-name="Shepherd Drupal" \
