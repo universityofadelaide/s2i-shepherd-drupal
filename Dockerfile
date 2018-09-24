@@ -46,12 +46,13 @@ RUN apt-get update \
   php-xml \
   php-zip \
   ssmtp \
+  unzip \
   wget \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install Composer.
 RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer global require hirak/prestissimo
+RUN composer global require --no-interaction hirak/prestissimo
 
 # Make bash the default shell.
 RUN ln -sf /bin/bash /bin/sh
