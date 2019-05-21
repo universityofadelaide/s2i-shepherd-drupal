@@ -26,19 +26,23 @@ RUN apt-get update \
 && locale-gen en_AU.UTF-8 \
 && apt-get -y dist-upgrade \
 && apt-get -y install \
+  gnupg2 \
+  iputils-ping \
+  telnet \
+  bind9-host \
   apache2 \
   git \
-  libapache2-mod-php \
+  libapache2-mod-php7.2 \
   libedit-dev \
   mysql-client \
-  openssh-client \
-  php-common \
   php-apcu \
   php-bcmath \
+  php-common \
   php-curl \
   php-gd \
   php-ldap \
   php-mbstring \
+  php-memcached \
   php-mysql \
   php-opcache \
   php-redis \
