@@ -32,7 +32,7 @@ RUN apt-get update \
   gnupg2 \
   iproute2 \
   iputils-ping \
-  libapache2-mod-php7.2 \
+  libapache2-mod-php \
   libedit-dev \
   mysql-client \
   php-apcu \
