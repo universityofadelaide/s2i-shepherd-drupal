@@ -49,6 +49,7 @@ RUN apt-get update \
   php-soap \
   php-xml \
   php-zip \
+  rsync \
   ssmtp \
   telnet \
   unzip \
