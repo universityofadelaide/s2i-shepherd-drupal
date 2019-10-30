@@ -65,6 +65,7 @@ RUN ln -sf /bin/bash /bin/sh
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
+COPY ./files/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 
 # PHP config.
 COPY ./files/php_custom.ini /etc/php/7.2/mods-available/php_custom.ini
