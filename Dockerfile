@@ -60,6 +60,15 @@ RUN apt-get update \
 RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer global require --no-interaction hirak/prestissimo
 
+# Install NewRelic.
+COPY ./files/newrelic.ini /etc/php/7.2/mods-available
+
+RUN wget -q -O - https://download.newrelic.com/php_agent/release/newrelic-php5-9.3.0.248-linux.tar.gz | tar -C /tmp -zx \
+&& export NR_INSTALL_USE_CP_NOT_LN=1 \
+&& export NR_INSTALL_SILENT=1 \
+&& /tmp/newrelic-php5-*/newrelic-install install \
+&& rm -rf /etc/php/7.2/apache2/conf.d/newrelic.ini /etc/php/7.2/cli/conf.d/newrelic.ini /tmp/newrelic-php5-* /tmp/nrinstall*
+
 # Make bash the default shell.
 RUN ln -sf /bin/bash /bin/sh
 
@@ -74,7 +83,8 @@ RUN a2enmod rewrite \
 && a2dismod vhost_alias \
 && a2disconf other-vhosts-access-log \
 && a2dissite 000-default \
-&& phpenmod -v ALL -s ALL php_custom
+&& phpenmod -v ALL -s ALL php_custom \
+&& phpenmod -v ALL -s ALL newrelic
 
 # Add /code /shared directories and ensure ownership by User 33 (www-data) and Group 0 (root).
 RUN mkdir -p /code /shared
