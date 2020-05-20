@@ -34,7 +34,7 @@ RUN apt-get update \
   iputils-ping \
   libapache2-mod-php \
   libedit-dev \
-  mysql-client \
+  mariadb-client \
   php-apcu \
   php-bcmath \
   php-common \
