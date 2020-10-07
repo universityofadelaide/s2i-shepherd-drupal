@@ -28,6 +28,10 @@ RUN apt-get update \
 && apt-get -y install \
   apache2 \
   bind9-host \
+  fontconfig \
+  libxrender1 \
+  xfonts-base \
+  xfonts-75dpi \
   git \
   gnupg2 \
   iproute2 \
@@ -59,6 +63,11 @@ RUN apt-get update \
 # Install Composer.
 RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer global require --no-interaction hirak/prestissimo
+
+# Install wkhtmltopdf.
+RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb -O /tmp/wkhtmltopdf.deb \
+&& dpkg -i /tmp/wkhtmltopdf.deb \
+&& rm -f /tmp/wkhtmltopdf.deb
 
 # Make bash the default shell.
 RUN ln -sf /bin/bash /bin/sh
