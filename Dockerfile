@@ -57,7 +57,7 @@ RUN apt-get update \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install Composer.
-RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
+RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
 RUN composer global require --no-interaction hirak/prestissimo
 
 # Make bash the default shell.
