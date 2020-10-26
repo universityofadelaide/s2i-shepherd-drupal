@@ -66,7 +66,7 @@ RUN NR_INSTALL_SILENT=1 newrelic-install install \
 && rm -f /etc/php/7.2/cli/conf.d/20-newrelic.ini /etc/php/7.2/cli/conf.d/newrelic.ini
 
 # Install Composer.
-RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
+RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
 RUN composer global require --no-interaction hirak/prestissimo
 
 # Make bash the default shell.
