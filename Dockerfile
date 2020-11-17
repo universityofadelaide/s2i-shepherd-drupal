@@ -56,8 +56,18 @@ RUN apt-get update \
   wget \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
+# NewRelic is disabled by default.
+ENV NEW_RELIC_ENABLED=false
+
+# Install NewRelic agent https://docs.newrelic.com/docs/agents/php-agent/installation/php-agent-installation-ubuntu-debian
+RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
+    wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
+    apt-get update && \
+    apt-get install -y newrelic-php5 && \
+    rm -f /etc/php/7.2/mods-available/newrelic.ini /etc/php/7.2/apache2/conf.d/20-newrelic.ini /etc/php/7.2/cli/conf.d/20-newrelic.ini
+
 # Install Composer.
-RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer
+RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
 RUN composer global require --no-interaction hirak/prestissimo
 
 # Make bash the default shell.
@@ -68,6 +78,7 @@ COPY ./files/apache2.conf /etc/apache2/apache2.conf
 
 # PHP config.
 COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
+COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
