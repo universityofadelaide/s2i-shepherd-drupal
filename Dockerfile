@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL MAINTAINER="Michael Priest <michael.priest@adelaide.edu.au>"
 
@@ -34,7 +34,7 @@ RUN apt-get update \
   iputils-ping \
   libapache2-mod-php \
   libedit-dev \
-  mysql-client \
+  mariadb-client \
   php-apcu \
   php-bcmath \
   php-common \
@@ -77,8 +77,8 @@ RUN ln -sf /bin/bash /bin/sh
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
 
 # PHP config.
-COPY ./files/php_custom.ini /etc/php/7.2/mods-available/php_custom.ini
-COPY ./files/newrelic.ini /etc/php/7.2/apache2/conf.d/newrelic.ini
+COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
+COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
