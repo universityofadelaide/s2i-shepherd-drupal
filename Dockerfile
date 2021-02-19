@@ -67,7 +67,7 @@ RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/
     rm -f /etc/php/7.2/mods-available/newrelic.ini /etc/php/7.2/apache2/conf.d/20-newrelic.ini /etc/php/7.2/cli/conf.d/20-newrelic.ini
 
 # Install Composer.
-RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
+RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --1
 RUN composer global require --no-interaction hirak/prestissimo
 
 # Make bash the default shell.
@@ -79,6 +79,9 @@ COPY ./files/apache2.conf /etc/apache2/apache2.conf
 # PHP config.
 COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
 COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
+
+# Health checks.
+COPY ./files/healthz.php /code/web/healthz.php
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
