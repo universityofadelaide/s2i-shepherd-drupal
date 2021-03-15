@@ -28,10 +28,6 @@ RUN apt-get update \
 && apt-get -y install \
   apache2 \
   bind9-host \
-  fontconfig \
-  libxrender1 \
-  xfonts-base \
-  xfonts-75dpi \
   git \
   gnupg2 \
   iproute2 \
@@ -58,10 +54,6 @@ RUN apt-get update \
   telnet \
   unzip \
   wget \
-&& echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-&& wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
-&& apt-get update \
-&& apt-get -y install newrelic-php5 \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # NewRelic is disabled by default.
