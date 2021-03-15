@@ -28,6 +28,10 @@ RUN apt-get update \
 && apt-get -y install \
   apache2 \
   bind9-host \
+  fontconfig \
+  libxrender1 \
+  xfonts-base \
+  xfonts-75dpi \
   git \
   gnupg2 \
   iproute2 \
