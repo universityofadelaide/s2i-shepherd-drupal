@@ -19,12 +19,12 @@ ENV LANG       en_AU.UTF-8
 ENV LANGUAGE   en_AU:en
 ENV LC_ALL     en_AU.UTF-8
 
-# Set the shell
+# Ensure shell is what we want.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
-&& apt-get -y --no-install-recommends install locales \
+&& apt-get -y --no-install-recommends install ca-certificates locales \
 && sed -i -e 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen \
 && locale-gen en_AU.UTF-8 \
 && apt-get -y upgrade \
@@ -64,7 +64,7 @@ ENV NEW_RELIC_ENABLED=false
 
 # Install NewRelic agent https://docs.newrelic.com/docs/agents/php-agent/installation/php-agent-installation-ubuntu-debian
 RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-&& wget -q -O - --no-check-certificate https://download.newrelic.com/548C16BF.gpg | apt-key add - \
+&& wget -q -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - \
 && apt-get update \
 && apt-get install -y --no-install-recommends newrelic-php5 \
 && rm -f /etc/php/7.4/mods-available/newrelic.ini /etc/php/7.4/apache2/conf.d/20-newrelic.ini /etc/php/7.4/cli/conf.d/20-newrelic.ini \
@@ -72,7 +72,7 @@ RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/
 && rm -rf /var/lib/apt/lists/*
 
 # Install Composer.
-RUN wget -q -O - --no-check-certificate https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
