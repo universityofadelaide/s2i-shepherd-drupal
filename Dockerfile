@@ -38,6 +38,7 @@ RUN apt-get update \
   libapache2-mod-php \
   libedit-dev \
   mariadb-client \
+  openssh-client \
   php-apcu \
   php-bcmath \
   php-common \
