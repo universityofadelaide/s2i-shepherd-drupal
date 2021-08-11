@@ -19,26 +19,28 @@ ENV LANG       en_AU.UTF-8
 ENV LANGUAGE   en_AU:en
 ENV LC_ALL     en_AU.UTF-8
 
+# Ensure shell is what we want.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
-&& apt-get -y install locales \
+&& apt-get -y --no-install-recommends install ca-certificates locales \
 && sed -i -e 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen \
 && locale-gen en_AU.UTF-8 \
-&& apt-get -y dist-upgrade \
-&& apt-get -y install \
+&& apt-get -y upgrade \
+&& apt-get -y --no-install-recommends install \
   apache2 \
   bind9-host \
-  fontconfig \
-  libxrender1 \
-  xfonts-base \
-  xfonts-75dpi \
+  ca-certificates \
   git \
   gnupg2 \
   iproute2 \
   iputils-ping \
+  less \
   libapache2-mod-php \
   libedit-dev \
   mariadb-client \
+  patch \
   php-apcu \
   php-bcmath \
   php-common \
@@ -54,6 +56,7 @@ RUN apt-get update \
   php-xml \
   php-zip \
   rsync \
+  ssh-client \
   ssmtp \
   telnet \
   unzip \
@@ -64,23 +67,21 @@ RUN apt-get update \
 ENV NEW_RELIC_ENABLED=false
 
 # Install NewRelic agent https://docs.newrelic.com/docs/agents/php-agent/installation/php-agent-installation-ubuntu-debian
-RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list && \
-    wget -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
-    apt-get update && \
-    apt-get install -y newrelic-php5 && \
-    rm -f /etc/php/7.4/mods-available/newrelic.ini /etc/php/7.4/apache2/conf.d/20-newrelic.ini /etc/php/7.4/cli/conf.d/20-newrelic.ini
+RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
+&& wget -q -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - \
+&& apt-get update \
+&& apt-get install -y --no-install-recommends newrelic-php5 \
+&& rm -f /etc/php/7.4/mods-available/newrelic.ini /etc/php/7.4/apache2/conf.d/20-newrelic.ini /etc/php/7.4/cli/conf.d/20-newrelic.ini \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
 
 # Install Composer.
-RUN wget -q https://getcomposer.org/installer -O - | php -- --install-dir=/usr/local/bin --filename=composer --version=1.10.16
-RUN composer global require --no-interaction hirak/prestissimo
+RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install wkhtmltopdf.
 RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb -O /tmp/wkhtmltopdf.deb \
 && dpkg -i /tmp/wkhtmltopdf.deb \
 && rm -f /tmp/wkhtmltopdf.deb
-
-# Make bash the default shell.
-RUN ln -sf /bin/bash /bin/sh
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
