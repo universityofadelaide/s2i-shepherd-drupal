@@ -31,14 +31,16 @@ RUN apt-get update \
 && apt-get -y --no-install-recommends install \
   apache2 \
   bind9-host \
+  ca-certificates \
   git \
   gnupg2 \
   iproute2 \
   iputils-ping \
+  less \
   libapache2-mod-php \
   libedit-dev \
   mariadb-client \
-  openssh-client \
+  patch \
   php-apcu \
   php-bcmath \
   php-common \
@@ -54,6 +56,7 @@ RUN apt-get update \
   php-xml \
   php-zip \
   rsync \
+  ssh-client \
   ssmtp \
   telnet \
   unzip \
