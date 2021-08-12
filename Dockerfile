@@ -31,6 +31,10 @@ RUN apt-get update \
 && apt-get -y --no-install-recommends install \
   apache2 \
   bind9-host \
+  fontconfig \
+  libxrender1 \
+  xfonts-base \
+  xfonts-75dpi \
   ca-certificates \
   git \
   gnupg2 \
