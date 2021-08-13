@@ -33,6 +33,7 @@ RUN apt-get update \
   bind9-host \
   fontconfig \
   libxrender1 \
+  libxext6 \
   xfonts-base \
   xfonts-75dpi \
   ca-certificates \
