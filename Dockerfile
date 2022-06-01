@@ -82,6 +82,10 @@ RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/l
 RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 \
 && chmod +rx /usr/local/bin/local-php-security-checker
 
+# Install PHP Local Security Checker
+RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 \
+&& chmod +rx /usr/local/bin/local-php-security-checker
+
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
 
