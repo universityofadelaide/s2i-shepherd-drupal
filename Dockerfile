@@ -61,6 +61,10 @@ RUN apt-get update \
   telnet \
   unzip \
   wget \
+  lynx \
+  htmldoc \
+  zip \
+  pear \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # NewRelic is disabled by default.
@@ -88,6 +92,10 @@ COPY ./files/apache2.conf /etc/apache2/apache2.conf
 # PHP config.
 COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
 COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
+
+# Install Pear libs
+RUN pear install --alldeps Mail Mail_Mime
+RUN a2enmod cgi
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
