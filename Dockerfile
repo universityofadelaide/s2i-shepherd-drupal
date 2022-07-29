@@ -45,6 +45,7 @@ RUN apt-get update \
   php-bcmath \
   php-common \
   php-curl \
+  php-dev \
   php-gd \
   php-ldap \
   php-mbstring \
@@ -64,8 +65,11 @@ RUN apt-get update \
   lynx \
   htmldoc \
   zip \
-  pear \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
+
+# Install pear
+RUN wget http://pear.php.net/go-pear.phar \
+&& php go-pear.phar
 
 # NewRelic is disabled by default.
 ENV NEW_RELIC_ENABLED=false
