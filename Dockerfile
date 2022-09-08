@@ -97,7 +97,7 @@ RUN a2enmod rewrite \
 && phpenmod -v ALL -s ALL php_custom
 
 # Add /code /shared directories and ensure ownership by User 33 (www-data) and Group 0 (root).
-RUN mkdir -p /code /shared
+RUN mkdir -p /code/web /shared
 
 # Add s2i scripts.
 COPY ./s2i/bin /usr/local/s2i
@@ -123,7 +123,9 @@ RUN chmod -R g+rwX  /var/www \
 &&  chmod -R g+rwX  /var/run/apache2 \
 &&  chmod -R g+rwX  /var/log/apache2 \
 &&  chmod -R g+rwX  /code \
-&&  chmod -R g+rwX  /shared
+&&  chmod -R g+rwX  /shared \
+&&  chmod g+s /code \
+&&  chmod g+s /code/web
 
 # Change the homedir of www-data to be /code.
 RUN usermod -d /code www-data
