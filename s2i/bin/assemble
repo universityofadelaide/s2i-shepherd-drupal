@@ -46,7 +46,6 @@ if [ -f composer.json ]; then
 
   if [ -f web/.htaccess ]; then
       echo "---> Ensuring web/.htaccess file is group writable..."
-      chown 33:0 web/.htaccess
       chmod g+w web/.htaccess
   fi
 
