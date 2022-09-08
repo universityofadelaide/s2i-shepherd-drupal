@@ -23,6 +23,13 @@ if [ -n "${WEB_PATH:+1}" ]; then
   # Unset $WEB_PATH if it's just a slash. Otherwise Apache does weird things.
   if [ "$WEB_PATH" == "/" ]; then
     unset WEB_PATH
+  else
+    # Set rewrite base in htaccess to WEB_PATH to generate correct URLs.
+    # Uses three steps via a temp file because /code/web is not group writable.
+    HTACCESS_TEMP=$(tempfile)
+    sed "s@# RewriteBase /\$@RewriteBase ${WEB_PATH}@g" /code/web/.htaccess > ${HTACCESS_TEMP}
+    cp ${HTACCESS_TEMP} /code/web/.htaccess
+    rm ${HTACCESS_TEMP}
   fi
 fi
 

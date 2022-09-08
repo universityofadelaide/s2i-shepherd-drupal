@@ -45,8 +45,9 @@ if [ -f composer.json ]; then
   fi
 
   if [ -f web/.htaccess ]; then
-    echo "---> Add the WEB_PATH variable to .htaccess..."
-    sed -i "s@# RewriteBase /\$@RewriteBase \${WEB_PATH}@g" /code/web/.htaccess
+      echo "---> Ensuring web/.htaccess file is group writable..."
+      chown 33:0 web/.htaccess
+      chmod g+w web/.htaccess
   fi
 
   echo "---> Storing git ref..."
