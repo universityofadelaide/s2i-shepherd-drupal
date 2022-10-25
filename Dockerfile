@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 LABEL MAINTAINER="Michael Priest <michael.priest@adelaide.edu.au>"
 
@@ -8,25 +8,29 @@ LABEL io.k8s.description="Platform for serving Drupal PHP apps in Shepherd" \
       io.openshift.tags="builder,shepherd,drupal,php,apache" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i"
 
+ARG PHP="7.4"
+
+# Ensure shell is what we want.
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 ENV DEBIAN_FRONTEND noninteractive
 
 # Configured timezone.
 ENV TZ=Australia/Adelaide
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Ensure UTF-8.
-ENV LANG       en_AU.UTF-8
-ENV LANGUAGE   en_AU:en
-ENV LC_ALL     en_AU.UTF-8
-
-# Ensure shell is what we want.
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
-&& apt-get -y --no-install-recommends install ca-certificates locales \
+&& apt-get -y --no-install-recommends install ca-certificates apt apt-utils \
+&& apt-get -y upgrade \
+&& apt-get -y --no-install-recommends install openssh-client patch software-properties-common locales gnupg2 gpg-agent wget \
 && sed -i -e 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen \
 && locale-gen en_AU.UTF-8 \
+&& wget -q -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
+&& echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
+&& apt-get -y upgrade \
+&& add-apt-repository -y ppa:ondrej/php \
+&& apt-get -y update \
 && apt-get -y upgrade \
 && apt-get -y --no-install-recommends install \
   apache2 \
@@ -37,24 +41,25 @@ RUN apt-get update \
   iproute2 \
   iputils-ping \
   less \
-  libapache2-mod-php \
+  libapache2-mod-php${PHP} \
   libedit-dev \
   mariadb-client \
+  newrelic-php5 \
   patch \
-  php-apcu \
-  php-bcmath \
-  php-common \
-  php-curl \
-  php-gd \
-  php-ldap \
-  php-mbstring \
-  php-memcached \
-  php-mysql \
-  php-opcache \
-  php-redis \
-  php-soap \
-  php-xml \
-  php-zip \
+  php${PHP}-apcu \
+  php${PHP}-bcmath \
+  php${PHP}-common \
+  php${PHP}-curl \
+  php${PHP}-gd \
+  php${PHP}-ldap \
+  php${PHP}-mbstring \
+  php${PHP}-memcached \
+  php${PHP}-mysql \
+  php${PHP}-opcache \
+  php${PHP}-redis \
+  php${PHP}-soap \
+  php${PHP}-xml \
+  php${PHP}-zip \
   rsync \
   ssh-client \
   ssmtp \
@@ -66,14 +71,11 @@ RUN apt-get update \
 # NewRelic is disabled by default.
 ENV NEW_RELIC_ENABLED=false
 
-# Install NewRelic agent https://docs.newrelic.com/docs/agents/php-agent/installation/php-agent-installation-ubuntu-debian
-RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-&& wget -q -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - \
-&& apt-get update \
-&& apt-get install -y --no-install-recommends newrelic-php5 \
-&& rm -f /etc/php/7.4/mods-available/newrelic.ini /etc/php/7.4/apache2/conf.d/20-newrelic.ini /etc/php/7.4/cli/conf.d/20-newrelic.ini \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/*
+# Remove the default newrelic config.
+RUN rm -f /etc/php/${PHP}/mods-available/newrelic.ini /etc/php/${PHP}/apache2/conf.d/20-newrelic.ini /etc/php/${PHP}/cli/conf.d/20-newrelic.ini
+
+# Set the PHP interpreter to the correct one.
+RUN update-alternatives --set php /usr/bin/php${PHP}
 
 # Install Composer.
 RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -87,8 +89,8 @@ COPY ./files/apache2.conf /etc/apache2/apache2.conf
 COPY ./files/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 
 # PHP config.
-COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
-COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
+COPY ./files/php_custom.ini /etc/php/${PHP}/mods-available/php_custom.ini
+COPY ./files/newrelic.ini /etc/php/${PHP}/apache2/conf.d/newrelic.ini
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
