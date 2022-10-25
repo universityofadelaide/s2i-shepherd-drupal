@@ -84,6 +84,7 @@ RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabp
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
+COPY ./files/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 
 # PHP config.
 COPY ./files/php_custom.ini /etc/php/7.4/mods-available/php_custom.ini
@@ -91,6 +92,7 @@ COPY ./files/newrelic.ini /etc/php/7.4/apache2/conf.d/newrelic.ini
 
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
+&& a2enmod mpm_prefork \
 && a2dismod vhost_alias \
 && a2disconf other-vhosts-access-log \
 && a2dissite 000-default \

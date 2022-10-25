@@ -5,10 +5,10 @@ build:
 	docker build -t $(IMAGE_NAME) .
 
 tag:
-	docker tag $(IMAGE_NAME) uofa/s2i-shepherd-drupal:openshift-4.x
+	docker tag $(IMAGE_NAME) uofa/s2i-shepherd-drupal:prefork-tweaks
 
 push:
-	docker push uofa/s2i-shepherd-drupal:openshift-4.x
+	docker push uofa/s2i-shepherd-drupal:prefork-tweaks
 
 .PHONY: test
 test:
