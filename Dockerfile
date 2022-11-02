@@ -28,7 +28,6 @@ RUN apt-get update \
 && locale-gen en_AU.UTF-8 \
 && wget -q -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
 && echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-&& apt-get -y upgrade \
 && add-apt-repository -y ppa:ondrej/php \
 && apt-get -y update \
 && apt-get -y upgrade \
