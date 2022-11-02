@@ -8,7 +8,7 @@ LABEL io.k8s.description="Platform for serving Drupal PHP apps in Shepherd" \
       io.openshift.tags="builder,shepherd,drupal,php,apache" \
       io.openshift.s2i.scripts-url="image:///usr/local/s2i"
 
-ARG PHP="7.4"
+ARG PHP="8.1"
 
 # Ensure shell is what we want.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -28,7 +28,6 @@ RUN apt-get update \
 && locale-gen en_AU.UTF-8 \
 && wget -q -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
 && echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-&& add-apt-repository -y ppa:ondrej/php \
 && apt-get -y update \
 && apt-get -y upgrade \
 && apt-get -y --no-install-recommends install \
@@ -80,7 +79,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP}
 RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHP Local Security Checker
-RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.3/local-php-security-checker_2.0.3_linux_amd64 \
+RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.5/local-php-security-checker_2.0.5_linux_amd64 \
 && chmod +rx /usr/local/bin/local-php-security-checker
 
 # Apache config.
