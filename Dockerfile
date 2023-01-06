@@ -73,6 +73,9 @@ ENV NEW_RELIC_ENABLED=false
 # Remove the default newrelic config.
 RUN rm -f /etc/php/${PHP}/mods-available/newrelic.ini /etc/php/${PHP}/apache2/conf.d/20-newrelic.ini /etc/php/${PHP}/cli/conf.d/20-newrelic.ini
 
+# Allow insecure SSL negotiation for CAS.
+RUN echo 'Options = UnsafeLegacyRenegotiation' >> /etc/ssl/openssl.cnf
+
 # Set the PHP interpreter to the correct one.
 RUN update-alternatives --set php /usr/bin/php${PHP}
 
@@ -80,7 +83,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP}
 RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHP Local Security Checker
-RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.3/local-php-security-checker_2.0.3_linux_amd64 \
+RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 \
 && chmod +rx /usr/local/bin/local-php-security-checker
 
 # Apache config.
