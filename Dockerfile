@@ -69,6 +69,8 @@ RUN apt-get update \
   telnet \
   unzip \
   wget \
+  python3-yaml \
+  p7zip-full \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # NewRelic is disabled by default.
@@ -91,7 +93,10 @@ RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabp
 && chmod +rx /usr/local/bin/local-php-security-checker
 
 # Install wkhtmltopdf.
-RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bionic_ppc64el.deb -O /tmp/wkhtmltopdf.deb \
+RUN wget -q http://ftp.au.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_2.1.5-2_amd64.deb -O /tmp/libjpeg62-turbo.deb \
+&& dpkg -i /tmp/libjpeg62-turbo.deb \
+&& rm -f /tmp/libjpeg62-turbo.deb
+RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb -O /tmp/wkhtmltopdf.deb \
 && dpkg -i /tmp/wkhtmltopdf.deb \
 && rm -f /tmp/wkhtmltopdf.deb
 
