@@ -91,7 +91,7 @@ RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabp
 && chmod +rx /usr/local/bin/local-php-security-checker
 
 # Install wkhtmltopdf.
-RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb -O /tmp/wkhtmltopdf.deb \
+RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bionic_ppc64el.deb -O /tmp/wkhtmltopdf.deb \
 && dpkg -i /tmp/wkhtmltopdf.deb \
 && rm -f /tmp/wkhtmltopdf.deb
 
