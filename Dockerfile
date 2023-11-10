@@ -65,6 +65,7 @@ RUN apt-get update \
   lynx \
   htmldoc \
   zip \
+&& chmod 755 /etc/ssmtp -R \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # Install pear
