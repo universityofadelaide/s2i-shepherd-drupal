@@ -56,7 +56,7 @@ RUN apt-get update \
   php${PHP}-gd \
   php${PHP}-ldap \
   php${PHP}-mbstring \
-  php${PHP}-memcached \
+  php${PHP}-memcache \
   php${PHP}-mysql \
   php${PHP}-opcache \
   php${PHP}-redis \
