@@ -64,6 +64,12 @@ RUN apt-get update \
   telnet \
   unzip \
   wget \
+  # Install wkhtmltopdf dependencies.
+  fontconfig \
+  libxext6 \
+  libxrender1 \
+  xfonts-75dpi \
+  xfonts-base \
 && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # NewRelic is disabled by default.
