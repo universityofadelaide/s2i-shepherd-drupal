@@ -5,10 +5,10 @@ build:
 	docker build -t $(IMAGE_NAME) .
 
 tag:
-	docker tag $(IMAGE_NAME) uofa/s2i-shepherd-drupal:openshift-4.x-22.04-php8.3
+	docker tag $(IMAGE_NAME) uofa/s2i-shepherd-drupal:admissions-pdf-php8.3
 
 push:
-	docker push uofa/s2i-shepherd-drupal:openshift-4.x-22.04-php-8.3
+	docker push uofa/s2i-shepherd-drupal:admissions-pdf-php8.3
 
 .PHONY: test
 test:
