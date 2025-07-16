@@ -19,6 +19,10 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=Australia/Adelaide
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# Workaround for New Relic package being signed with an unsupported signing key.
+# See https://support.newrelic.com/s/hubtopic/aAXPh000000BZYjOAO/gpg-errors-when-installing-linux-net-and-php-agents-on-ubuntu-noble-2404
+RUN apt-config dump | grep -we 'APT::Key::Assert-Pubkey-Algo "' | sed 's/";/,dsa1024";/' | tee /etc/apt/apt.conf.d/99PubKeyAlgoWorkaround
+
 # Upgrade all currently installed packages and install web server packages.
 RUN apt-get update \
 && apt-get -y --no-install-recommends install ca-certificates apt apt-utils \
