@@ -26,8 +26,8 @@ RUN apt-get update \
 && apt-get -y --no-install-recommends install openssh-client patch software-properties-common locales gnupg2 gpg-agent wget \
 && sed -i -e 's/# en_AU.UTF-8 UTF-8/en_AU.UTF-8 UTF-8/' /etc/locale.gen \
 && locale-gen en_AU.UTF-8 \
-&& wget -q -O- https://download.newrelic.com/548C16BF.gpg | apt-key add - \
-&& echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
+&& wget -O- https://download.newrelic.com/NEWRELIC_APT_2DAD550E.public | gpg --import --batch --no-default-keyring --keyring /usr/share/keyrings/download.newrelic.com-newrelic.gpg \
+&& echo 'deb [signed-by=/usr/share/keyrings/download.newrelic.com-newrelic.gpg] http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
 && apt-get -y update \
 && apt-get -y upgrade \
 && apt-get -y --no-install-recommends install \
