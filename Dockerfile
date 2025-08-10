@@ -13,7 +13,7 @@ ARG PHP="8.3"
 # Ensure shell is what we want.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Configured timezone.
 ENV TZ=Australia/Adelaide
@@ -114,7 +114,7 @@ RUN mkdir -p /code/web /shared
 # Add s2i scripts.
 COPY ./s2i/bin /usr/local/s2i
 RUN chmod +x /usr/local/s2i/*
-ENV PATH "$PATH:/usr/local/s2i:/code/bin"
+ENV PATH="$PATH:/usr/local/s2i:/code/bin"
 
 # Web port.
 EXPOSE 8080
