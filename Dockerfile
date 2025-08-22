@@ -110,6 +110,7 @@ COPY ./files/newrelic.ini /etc/php/${PHP}/apache2/conf.d/newrelic.ini
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
   && a2enmod mpm_prefork \
+  && a2enmod headers \
   && a2dismod vhost_alias \
   && a2disconf other-vhosts-access-log \
   && a2dissite 000-default \
