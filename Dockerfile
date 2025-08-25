@@ -64,6 +64,12 @@ RUN apt-get update \
   telnet \
   unzip \
   wget \
+  # Install wkhtmltopdf dependencies.
+  fontconfig \
+  libxext6 \
+  libxrender1 \
+  xfonts-75dpi \
+  xfonts-base \
   && apt-get -y autoremove && apt-get -y autoclean && apt-get clean && rm -rf /var/lib/apt/lists /tmp/* /var/tmp/*
 
 # NewRelic is disabled by default.
@@ -71,16 +77,6 @@ ENV NEW_RELIC_ENABLED=false
 
 # Remove the default newrelic config.
 RUN rm -f /etc/php/${PHP}/mods-available/newrelic.ini /etc/php/${PHP}/apache2/conf.d/20-newrelic.ini /etc/php/${PHP}/cli/conf.d/20-newrelic.ini
-
-# Allow insecure SSL negotiation for CURL problems with RSS feeds.
-RUN sed -i '/^providers = provider_sect/a \
-  ssl_conf = ssl_sect\n\
-  \n\
-  [ssl_sect]\n\
-  system_default = system_default_sect\n\
-  \n\
-  [system_default_sect]\n\
-  Options = UnsafeLegacyServerConnect' /etc/ssl/openssl.cnf
 
 # Set the PHP interpreter to the correct one.
 RUN update-alternatives --set php /usr/bin/php${PHP}
@@ -91,6 +87,14 @@ RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/l
 # Install PHP Local Security Checker
 RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 \
   && chmod +rx /usr/local/bin/local-php-security-checker
+
+# Install wkhtmltopdf.
+RUN wget -q http://ftp.au.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_2.1.5-2_amd64.deb -O /tmp/libjpeg62-turbo.deb \
+&& dpkg -i /tmp/libjpeg62-turbo.deb \
+&& rm -f /tmp/libjpeg62-turbo.deb
+RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb -O /tmp/wkhtmltopdf.deb \
+&& dpkg -i /tmp/wkhtmltopdf.deb \
+&& rm -f /tmp/wkhtmltopdf.deb
 
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
@@ -103,6 +107,7 @@ COPY ./files/newrelic.ini /etc/php/${PHP}/apache2/conf.d/newrelic.ini
 # Configure apache modules, php modules, logging.
 RUN a2enmod rewrite \
   && a2enmod mpm_prefork \
+  && a2enmod headers \
   && a2dismod vhost_alias \
   && a2disconf other-vhosts-access-log \
   && a2dissite 000-default \
