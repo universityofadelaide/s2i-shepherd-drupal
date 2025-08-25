@@ -2,7 +2,8 @@ IMAGE_NAME = uofa/s2i-shepherd-drupal
 
 .PHONY: build
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker pull ubuntu:24.04
+	docker build --no-cache -t $(IMAGE_NAME) .
 
 tag:
 	docker tag $(IMAGE_NAME) uofa/s2i-shepherd-drupal:admissions-pdf-php8.3

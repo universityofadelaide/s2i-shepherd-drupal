@@ -78,9 +78,6 @@ ENV NEW_RELIC_ENABLED=false
 # Remove the default newrelic config.
 RUN rm -f /etc/php/${PHP}/mods-available/newrelic.ini /etc/php/${PHP}/apache2/conf.d/20-newrelic.ini /etc/php/${PHP}/cli/conf.d/20-newrelic.ini
 
-# Allow insecure SSL negotiation for CAS.
-RUN echo 'Options = UnsafeLegacyRenegotiation' >> /etc/ssl/openssl.cnf
-
 # Set the PHP interpreter to the correct one.
 RUN update-alternatives --set php /usr/bin/php${PHP}
 
