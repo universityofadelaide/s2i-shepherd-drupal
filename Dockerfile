@@ -88,10 +88,6 @@ RUN update-alternatives --set php /usr/bin/php${PHP}
 # Install Composer.
 RUN wget -q -O - https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP Local Security Checker
-RUN wget -q -O /usr/local/bin/local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 \
-  && chmod +rx /usr/local/bin/local-php-security-checker
-
 # Apache config.
 COPY ./files/apache2.conf /etc/apache2/apache2.conf
 COPY ./files/mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
