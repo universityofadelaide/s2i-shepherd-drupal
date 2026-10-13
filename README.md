@@ -68,6 +68,15 @@ The builder image can also be created by using the *make* command since a *Makef
 
 Once the image has finished building, the command *s2i usage shepherd-drupal* will print out the help info that was defined in the *usage* script.
 
+#### Alternative build method
+It's possible to use docker buildkit(buildx), which uses a more modern concurrent build system (as opposed to legacy serial). This was useful when some images had problem running in the OpenShift environment.
+```
+# Create the buildkit container
+docker buildx create --name container --driver=docker-container container
+# Build the image from Dockerfile in current folder
+docker buildx build --builder=container --load --no-cache -t uofa/s2i-shepherd-drupal:php-8.3-test .
+```
+
 #### Testing the builder image
 The builder image can be tested using the following commands:
 ```
